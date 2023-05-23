@@ -14,7 +14,6 @@ const Home = ({ movieList }) => {
       /*       const playNow = getPosters(movieList);
       setPosters(playNow); */
     }
-    console.log(posters);
   }, [movieList, posters]);
 
   const getPosters = (arrayMovies) => {

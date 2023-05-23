@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { getCiudades } from "../../services/getCiudades";
 /* import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -19,6 +20,18 @@ export default function Form() {
   const [ubication, setUbication] = useState("");
   const [cines, setCines] = useState("");
   const [date, setDate] = useState("");
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    getCiudades()
+      .then((response) => {
+        if (!cities.length) {
+          setCities(response);
+        }
+      })
+      .catch((error) => console.log(error));
+  }, [cities]);
 
   const handleChangeUbication = (event) => {
     setUbication(event.target.value);
@@ -42,29 +55,41 @@ export default function Form() {
           onChange={handleChangeUbication}
           sx={stylesInputs}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {cities.length &&
+            cities.map((city) => {
+              return (
+                <MenuItem key={city.id} value={city.id}>
+                  {city.name}
+                </MenuItem>
+              );
+            })}
         </Select>
       </FormControl>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Cines cercanos</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={cines}
-          label="Cines cercanos"
-          onChange={handleChangeCines}
-          sx={stylesInputs}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth>
-        {/* <InputLabel id="demo-simple-select-label">Cines cercanos</InputLabel> */}
-        {/*         <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {ubication && (
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Cines cercanos</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={cines}
+            label="Cines cercanos"
+            onChange={handleChangeCines}
+            sx={stylesInputs}
+          >
+            {cities.map((city) => {
+              return (
+                <MenuItem key={city.id} value={city.id}>
+                  {city.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      )}
+      {ubication && cines && (
+        <FormControl fullWidth>
+          {/* <InputLabel id="demo-simple-select-label">Cines cercanos</InputLabel> */}
+          {/*         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer
             components={[
               "DatePicker",
@@ -79,20 +104,21 @@ export default function Form() {
             </DemoItem>
           </DemoContainer>
         </LocalizationProvider> */}
-        <InputLabel id="demo-simple-select-label">Fecha</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={date}
-          label="Cines cercanos"
-          onChange={handleChangeDate}
-          sx={stylesInputs}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
+          <InputLabel id="demo-simple-select-label">Fecha</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={date}
+            label="Cines cercanos"
+            onChange={handleChangeDate}
+            sx={stylesInputs}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+      )}
     </Box>
   );
 }

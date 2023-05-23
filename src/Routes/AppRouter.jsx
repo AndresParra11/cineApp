@@ -28,7 +28,6 @@ const AppRouter = () => {
   return (
     <div>
       <BrowserRouter>
-        {" "}
         {/* Siempre para iniciar las rutas. */}
         <Routes>
           <Route path={"/"} element={<Layout />}>
