@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/cineApp/static/css/main.4d180a74.css",
-    "main.js": "/cineApp/static/js/main.a63afcc4.js",
+    "main.js": "/cineApp/static/js/main.cac19743.js",
     "index.html": "/cineApp/index.html",
     "main.4d180a74.css.map": "/cineApp/static/css/main.4d180a74.css.map",
-    "main.a63afcc4.js.map": "/cineApp/static/js/main.a63afcc4.js.map"
+    "main.cac19743.js.map": "/cineApp/static/js/main.cac19743.js.map"
   },
   "entrypoints": [
     "static/css/main.4d180a74.css",
-    "static/js/main.a63afcc4.js"
+    "static/js/main.cac19743.js"
   ]
 }
