@@ -49,7 +49,7 @@ const Home = ({ movieList }) => {
       setFilters(params);
       Swal.fire("Good job!", "Has seleccionado una función!", "success");
       sessionStorage.setItem("searchParams", JSON.stringify(params));
-      navigate(`/${titleMovie}`);
+      navigate(`cineApp/${titleMovie}`);
     }
   };
 

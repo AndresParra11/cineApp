@@ -9,7 +9,7 @@ const DetalleFuncion = () => {
 
   useEffect(() => {
     if (!Object.entries(filters)) {
-      navigate("/");
+      navigate("/cineApp");
     }
   }, [filters, navigate]);
 
