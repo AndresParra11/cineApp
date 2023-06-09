@@ -1,9 +1,17 @@
 import { CircularProgress, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Home.scss";
+import { searchParamsContext } from "../../Routes/AppRouter";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ movieList }) => {
+  const navigate = useNavigate();
+
   const [posters, setPosters] = useState([]);
+
+  const { ubication, cines, date, setFilters } =
+    useContext(searchParamsContext);
 
   useEffect(() => {
     if (!posters.length) {
@@ -28,6 +36,23 @@ const Home = ({ movieList }) => {
     return posters;
   };
 
+  const handleNavegateDetails = (idMovie, titleMovie) => {
+    if (!ubication || !cines || !date) {
+      Swal.fire("Oopss!", "No has completado todos los datos", "error");
+    } else {
+      const params = {
+        ubication,
+        cines,
+        date,
+        idMovie,
+      };
+      setFilters(params);
+      Swal.fire("Good job!", "Has seleccionado una función!", "success");
+      sessionStorage.setItem("searchParams", JSON.stringify(params));
+      navigate(`/${titleMovie}`);
+    }
+  };
+
   return (
     <main className="main">
       <h1>Cartelera</h1>
@@ -36,7 +61,11 @@ const Home = ({ movieList }) => {
         {posters.length ? (
           posters.map((poster) => (
             <figure key={poster.id}>
-              <img src={poster.image} alt={poster.title} />
+              <img
+                src={poster.image}
+                alt={poster.title}
+                onClick={() => handleNavegateDetails(poster.id, poster.title)}
+              />
             </figure>
           ))
         ) : (

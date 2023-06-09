@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { getCiudades } from "../../services/getCiudades";
+import { getFechasFunciones } from "../../services/getFechasFunciones";
+import { searchParamsContext } from "../../Routes/AppRouter";
 /* import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -17,11 +19,11 @@ const stylesInputs = {
 };
 
 export default function Form() {
-  const [ubication, setUbication] = useState("");
-  const [cines, setCines] = useState("");
-  const [date, setDate] = useState("");
-
   const [cities, setCities] = useState([]);
+  const [dates, setDates] = useState([]);
+
+  const { ubication, setUbication, cines, setCines, date, setDate } =
+    useContext(searchParamsContext);
 
   useEffect(() => {
     getCiudades()
@@ -31,13 +33,21 @@ export default function Form() {
         }
       })
       .catch((error) => console.log(error));
+
+    getFechasFunciones()
+      .then((response) => {
+        setDates(response);
+      })
+      .catch((error) => console.log(error));
   }, [cities]);
 
   const handleChangeUbication = (event) => {
-    setUbication(event.target.value);
+    const cinema = event.target.value;
+    setUbication(cinema);
   };
   const handleChangeCines = (event) => {
-    setCines(event.target.value);
+    const cine = event.target.value;
+    setCines(cine);
   };
   const handleChangeDate = (event) => {
     setDate(event.target.value);
@@ -48,6 +58,7 @@ export default function Form() {
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Ubicación</InputLabel>
         <Select
+          name="ubication"
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={ubication}
@@ -58,7 +69,7 @@ export default function Form() {
           {cities.length &&
             cities.map((city) => {
               return (
-                <MenuItem key={city.id} value={city.id}>
+                <MenuItem key={city.id} value={city.name}>
                   {city.name}
                 </MenuItem>
               );
@@ -69,6 +80,7 @@ export default function Form() {
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Cines cercanos</InputLabel>
           <Select
+            name="cines"
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={cines}
@@ -76,13 +88,15 @@ export default function Form() {
             onChange={handleChangeCines}
             sx={stylesInputs}
           >
-            {cities.map((city) => {
-              return (
-                <MenuItem key={city.id} value={city.id}>
-                  {city.name}
-                </MenuItem>
-              );
-            })}
+            {cities
+              .find((city) => city.name === ubication)
+              .teatros.map((theater) => {
+                return (
+                  <MenuItem key={theater.id} value={theater.name}>
+                    {theater.name}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </FormControl>
       )}
@@ -106,6 +120,7 @@ export default function Form() {
         </LocalizationProvider> */}
           <InputLabel id="demo-simple-select-label">Fecha</InputLabel>
           <Select
+            name="dates"
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={date}
@@ -113,9 +128,14 @@ export default function Form() {
             onChange={handleChangeDate}
             sx={stylesInputs}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {dates.length &&
+              dates.map((date, index) => {
+                return (
+                  <MenuItem key={index} value={date}>
+                    {date}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </FormControl>
       )}
